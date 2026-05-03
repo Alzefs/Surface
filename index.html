@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surface | The Singularity ⌭</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #ff00ff; --c: #00ffff; --bg: #050505; }
+        
+        /* İmleci Gizle (Kendi imlecimizi kullanacağız) */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        
+        body { background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; }
+
+        /* Tatlı Özel İmleç Tasarımı */
+        #custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 0, 255, 0.4);
+            border: 2px solid #ff00ff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.1s ease-out, background 0.2s ease;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        #cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #00ffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 100000;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        /* Scanned Reality Overlay */
+        #overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 10000;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+                        repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(255, 0, 255, 0.05) 2px);
+            background-size: 100% 3px, 100% 4px;
+        }
+
+        /* Deep Parallax World */
+        #world {
+            position: fixed; inset: -10%; width: 120%; height: 120%;
+            background: url('https://images.alphacoders.com/132/1324151.png') no-repeat center;
+            background-size: cover; filter: brightness(0.2) contrast(1.5) saturate(0.5);
+            z-index: -10; transition: 0.1s linear;
+        }
+
+        #neural-net { position: fixed; inset: 0; z-index: -5; opacity: 0.4; }
+
+        /* The Creator: qllahcan */
+        .creator-tag {
+            position: fixed; bottom: 50px; right: 60px; font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem; color: #fff; text-transform: uppercase; letter-spacing: -5px;
+            text-shadow: 0 0 10px var(--p), 0 0 30px var(--c);
+            z-index: 999; animation: chaoticGlow 0.1s infinite;
+        }
+
+        @keyframes chaoticGlow {
+            0% { transform: skew(5deg) scale(1); opacity: 0.8; }
+            50% { transform: skew(-5deg) scale(1.05); opacity: 1; text-shadow: -5px 0 var(--p), 5px 0 var(--c); }
+            100% { transform: skew(2deg) scale(1); opacity: 0.9; }
+        }
+
+        .terminal-wrap { display: flex; justify-content: center; align-items: center; height: 100vh; perspective: 3000px; }
+
+        .terminal-core {
+            width: 420px; height: 850px; background: rgba(0,0,0,0.95);
+            border: 1px solid rgba(255,0,255,0.5); border-radius: 70px;
+            box-shadow: 0 0 100px rgba(255, 0, 255, 0.2), inset 0 0 50px rgba(0, 255, 255, 0.1);
+            position: relative; overflow: hidden; display: flex; flex-direction: column;
+            animation: singularityFloat 10s ease-in-out infinite; transform-style: preserve-3d;
+        }
+
+        @keyframes singularityFloat {
+            0%, 100% { transform: rotateY(-15deg) rotateX(10deg) translateY(0); }
+            50% { transform: rotateY(15deg) rotateX(-10deg) translateY(-40px); }
+        }
+
+        .engine-room { padding: 60px 40px; overflow-y: auto; flex: 1; scrollbar-width: none; }
+        .engine-room::-webkit-scrollbar { display: none; }
+
+        .protocol-title {
+            font-family: 'Orbitron', sans-serif; font-size: 3.5rem; text-align: center;
+            background: linear-gradient(var(--p), var(--c)); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--p));
+        }
+
+        .data-row {
+            background: rgba(255,255,255,0.02); border-left: 4px solid var(--p);
+            padding: 20px; margin-bottom: 20px; border-radius: 0 15px 15px 0;
+            opacity: 0; transform: rotateX(-90deg); transition: 0.8s cubic-bezier(0.1, 0.9, 0.2, 1);
+            color: #ddd; font-size: 1.1rem;
+        }
+
+        .data-row.active { opacity: 1; transform: rotateX(0); }
+        .data-row:hover { background: rgba(0, 255, 255, 0.1); border-left-color: var(--c); transform: scale(1.05) translateX(10px); color: #fff; }
+
+        .symbol-mark { color: var(--c); font-weight: bold; margin-right: 10px; text-shadow: 0 0 8px var(--c); }
+
+        .btn-core {
+            margin: 30px 50px; padding: 25px; border-radius: 40px;
+            background: #fff; color: #000; text-align: center;
+            font-family: 'Orbitron'; font-weight: 900; text-decoration: none;
+            box-shadow: 0 0 50px #fff; transition: 0.5s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Yeni İmleç Katmanları -->
+    <div id="custom-cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <div id="overlay"></div>
+    <div id="world"></div>
+    <canvas id="neural-net"></canvas>
+    <div class="creator-tag">qllahcan</div>
+
+    <div class="terminal-wrap">
+        <div class="terminal-core">
+            <div class="engine-room" id="content">
+                <h1 class="protocol-title">SURFACE</h1>
+                <p style="text-align: center; color: var(--c); letter-spacing: 8px; font-size: 0.8rem; margin-bottom: 40px;">⌭ qllahcan ⌭</p>
+            </div>
+            <a href="https://discord.gg/hwH4BAcBAS" target="_blank" class="btn-core">ACCESS SYSTEM</a>
+        </div>
+    </div>
+
+    <script>
+        // İmleç Takibi
+        const cursor = document.getElementById('custom-cursor');
+        const dot = document.getElementById('cursor-dot');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+            
+            // Parallax Arka Plan
+            const x = (e.clientX / window.innerWidth - 0.5) * 50;
+            const y = (e.clientY / window.innerHeight - 0.5) * 50;
+            document.getElementById('world').style.transform = `translate(${x}px, ${y}px) scale(1.2)`;
+        });
+
+        // Hover Efekti (Butonlara gelince imleç büyür)
+        const links = document.querySelectorAll('a, .data-row');
+        links.forEach(link => {
+            link.onmouseenter = () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+                cursor.style.background = 'rgba(0, 255, 255, 0.2)';
+            };
+            link.onmouseleave = () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursor.style.background = 'rgba(255, 0, 255, 0.4)';
+            };
+        });
+
+        // Neural Network & Diğer Fonksiyonlar (Aynı kalıyor)
+        const canvas = document.getElementById('neural-net');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+        }
+        for(let i=0; i<80; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                particles.forEach(p2 => {
+                    let dist = Math.hypot(p.x-p2.x, p.y-p2.y);
+                    if(dist < 120) {
+                        ctx.strokeStyle = `rgba(0, 255, 255, ${1 - dist/120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        const protocols = [
+            "KURAL 1: Saygı mutlak zorunluluktur.", "KURAL 2: Spam/Flood sistem hatasıdır.", "KURAL 3: İzinsiz reklam imha sebebidir.",
+            "KURAL 4: Kimseyi rahatsız etme, huzuru koru.", "KURAL 5: Siyaset ve din tartışmaları yasaktır.", "KURAL 6: NSFW ve şiddet içeren veri yasaktır.",
+            "KURAL 7: Sesli odalarda parazit yapma.", "KURAL 8: Yetkili hiyerarşisine tam itaat.", "KURAL 9: Kişisel veri paylaşımı yasaktır.",
+            "KURAL 10: Bot komutları ilgili kanala.", "KURAL 11: Rol suistimali yasaktır.", "KURAL 12: Kavga çıkarmak yasaktır.",
+            "KURAL 13: Başka kimliklere bürünmek yasaktır."
+        ];
+
+        const room = document.getElementById('content');
+        protocols.forEach((p, i) => {
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = 'data-row';
+                div.innerHTML = `<span class="symbol-mark">⌭</span> ${p}`;
+                room.appendChild(div);
+                setTimeout(() => div.classList.add('active'), 50);
+            }, i * 150 + 500);
+        });
+    </script>
+</body>
+</html>
