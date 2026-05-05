@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surface | 666 ⌭</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300ffff%22>⌭</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #ff00ff; --c: #00ffff; --bg: #020202; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        body { background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; }
+
+        /* Sol Üst Logo */
+        .main-logo {
+            position: fixed; top: 30px; left: 30px; display: flex;
+            align-items: center; z-index: 10001; pointer-events: all;
+        }
+        .logo-icon { font-size: 2.5rem; color: var(--c); text-shadow: 0 0 15px var(--c); margin-right: 15px; animation: logoSpin 4s linear infinite; }
+        .logo-text { display: flex; flex-direction: column; border-left: 1px solid rgba(255, 255, 255, 0.2); padding-left: 15px; }
+        .brand { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; letter-spacing: 3px; color: #fff; }
+        .version { font-size: 0.6rem; color: var(--p); letter-spacing: 2px; font-weight: bold; }
+        @keyframes logoSpin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+        /* Custom Cursor */
+        #cursor { position: fixed; width: 30px; height: 30px; border: 1.5px solid var(--p); border-radius: 50%; pointer-events: none; z-index: 100000; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; box-shadow: 0 0 15px var(--p); }
+        #dot { position: fixed; width: 5px; height: 5px; background: var(--c); border-radius: 50%; pointer-events: none; z-index: 100001; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--c); }
+
+        /* Scanned Grid Background */
+        #grid-bg {
+            position: fixed; inset: -10%; width: 120%; height: 120%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -10;
+            transition: transform 0.1s linear;
+        }
+
+        /* YENİ: Pure CSS/SVG Noise Efekti (Dış link kaldırıldı) */
+        #noise { 
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.04; 
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        #overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 10000;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 4px;
+        }
+
+        #particles { position: fixed; inset: 0; z-index: -5; opacity: 0.8; }
+
+        .creator {
+            position: fixed; bottom: 40px; right: 50px; font-family: 'Orbitron', sans-serif;
+            font-size: 3rem; color: #fff; z-index: 999; letter-spacing: -3px;
+            text-shadow: 0 0 20px var(--p), 5px 0 var(--c); animation: finalGlow 2s infinite alternate;
+        }
+        @keyframes finalGlow { from { opacity: 0.6; } to { opacity: 1; text-shadow: 0 0 40px var(--c), -5px 0 var(--p); } }
+
+        /* Terminal */
+        .terminal-wrap { display: flex; justify-content: center; align-items: center; height: 100vh; perspective: 2500px; }
+        .terminal-core {
+            width: 420px; height: 850px; background: rgba(0,0,0,0.95);
+            border: 1px solid rgba(0,255,255,0.15); border-radius: 60px;
+            box-shadow: 0 0 150px rgba(0,0,0,1), inset 0 0 40px rgba(255,0,255,0.05);
+            overflow: hidden; display: flex; flex-direction: column;
+            animation: terminalPulse 8s ease-in-out infinite; transform-style: preserve-3d;
+        }
+        @keyframes terminalPulse { 0%, 100% { transform: rotateY(-5deg) rotateX(2deg); } 50% { transform: rotateY(5deg) rotateX(-2deg); } }
+
+        .engine { padding: 50px 30px; overflow-y: auto; flex: 1; scrollbar-width: none; }
+        .engine::-webkit-scrollbar { display: none; }
+        .title { font-family: 'Orbitron'; font-size: 3rem; text-align: center; background: linear-gradient(var(--p), var(--c)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .row {
+            background: rgba(255,255,255,0.02); border-left: 3px solid var(--c);
+            padding: 18px; margin-bottom: 12px; border-radius: 0 10px 10px 0;
+            opacity: 0; transform: translateX(-20px); transition: 0.5s;
+        }
+        .row.active { opacity: 1; transform: translateX(0); }
+        .row:hover { background: rgba(0, 255, 255, 0.05); border-left-color: var(--p); transform: scale(1.03); }
+
+        .sym { display: inline-block; color: var(--c); margin-right: 12px; animation: symSpin 3s linear infinite; }
+        @keyframes symSpin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+        .btn {
+            margin: 20px 40px 40px; padding: 22px; border-radius: 50px;
+            background: transparent; border: 1px solid var(--c); color: var(--c);
+            text-align: center; font-family: 'Orbitron'; text-decoration: none;
+            transition: 0.4s; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;
+        }
+        .btn:hover { background: var(--c); color: #000; box-shadow: 0 0 50px var(--c); }
+    </style>
+</head>
+<body>
+
+    <div id="noise"></div>
+    <div id="overlay"></div>
+    <div id="cursor"></div>
+    <div id="dot"></div>
+    <div id="grid-bg"></div>
+    <canvas id="particles"></canvas>
+
+    <div class="main-logo">
+        <div class="logo-icon">⌭</div>
+        <div class="logo-text">
+            <span class="brand">SURFACE</span>
+            <span class="version">666</span>
+        </div>
+    </div>
+
+    <div class="creator">qllahcan</div>
+
+    <div class="terminal-wrap">
+        <div class="terminal-core">
+            <div class="engine" id="list">
+                <h1 class="title">SURFACE</h1>
+                <p style="text-align:center; color:var(--p); font-size:0.7rem; letter-spacing:5px; margin-bottom:30px; opacity:0.7;">⌭ qllahcan sunar ⌭</p>
+            </div>
+            <a href="https://discord.gg/hwH4BAcBAS" target="_blank" class="btn">Connect Protocol</a>
+        </div>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('cursor');
+        const dot = document.getElementById('dot');
+        const gridBg = document.getElementById('grid-bg');
+
+        document.addEventListener('mousemove', (e) => {
+            const cx = e.clientX, cy = e.clientY;
+            cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+            dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
+
+            const x = (cx / window.innerWidth - 0.5) * 40;
+            const y = (cy / window.innerHeight - 0.5) * 40;
+            gridBg.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        document.addEventListener('mousedown', () => { cursor.style.transform = 'translate(-50%, -50%) scale(1.8)'; cursor.style.background = 'rgba(255,0,255,0.1)'; });
+        document.addEventListener('mouseup', () => { cursor.style.transform = 'translate(-50%, -50%) scale(1)'; cursor.style.background = 'transparent'; });
+
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let pts = [];
+
+        function init() {
+            for(let i=0; i<80; i++) pts.push({
+                x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+                vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5
+            });
+        }
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            pts.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.fillStyle = 'rgba(0,255,255,0.3)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill();
+                pts.forEach(p2 => {
+                    let d = Math.hypot(p.x-p2.x, p.y-p2.y);
+                    if(d<120) {
+                        ctx.strokeStyle = `rgba(0,255,255,${0.15 - d/800})`;
+                        ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(draw);
+        }
+        init(); draw();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        const data = [
+            "Saygı mutlak zorunluluktur.", "Spam/Flood sistem hatasıdır.", "İzinsiz reklam imha sebebidir.",
+            "Huzuru koru, kimseyi rahatsız etme.", "Siyaset ve din tartışmaları yasaktır.", "NSFW ve şiddet içeren veri yasaktır.",
+            "Sesli odalarda parazit yapma.", "Yetkili hiyerarşisine tam itaat.", "Kişisel veri paylaşımı yasaktır.",
+            "Bot komutları ilgili kanala.", "Rol suistimali yasaktır.", "Kavga ve kaos yasaktır.", "Başka kimliklere bürünmek yasaktır."
+        ];
+
+        const list = document.getElementById('list');
+        data.forEach((txt, i) => {
+            setTimeout(() => {
+                const d = document.createElement('div');
+                d.className = 'row';
+                d.innerHTML = `<span class="sym">⌭</span> ${txt}`;
+                list.appendChild(d);
+                setTimeout(() => d.classList.add('active'), 50);
+            }, i * 150 + 800);
+        });
+    </script>
+</body>
+</html>
